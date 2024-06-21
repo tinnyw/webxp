@@ -6,10 +6,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Typescript compiler</title>
 
-	<link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
+	<script src="https://unpkg.com/typescript@latest/lib/typescript.js"></script>
+	<script>
+		const tsCode = 'const L: string = "LOGOS, i AGAPE YOU!!!!"; return L;';
+		const jsCode = window.ts.transpile(tsCode, {compilerOptions: {module: ts.ModuleKind.CommonJS}});
+		console.log("Converted ts code is: " + jsCode)
+
+		const jsFunc = new Function(jsCode)
+		document.write(jsFunc());
+	</script>
 
 
 </body>
