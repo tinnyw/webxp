@@ -6,15 +6,27 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Peer JS tutorial</title>
 	<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-	<script lang="js">
+	<script>
 		var peer = new Peer();
 		peer.on('open', function (id) {
 			console.log('My peer ID is: ' + id);
 		});
+		let socket = new WebSocket("ws://localhost:8080/ws")
+		socket.onopen = (e) => {
+			console.log("LOGOS, made a websocket connection to server");
+			console.log(`Object e is: ${JSON.stringify(e)}`)
+		}
 	</script>
+	<style>
+		body {
+			background-color: #333333;
+			color: white;
+		}
+	</style>
 </head>
 
 <body>
+	<h4>Peer js tutorial</h4>
 
 </body>
 
