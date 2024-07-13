@@ -7,14 +7,17 @@
 	<title>Peer JS tutorial</title>
 	<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 	<script>
-		var peer = new Peer();
-		peer.on('open', function (id) {
-			console.log('My peer ID is: ' + id);
-		});
-		let socket = new WebSocket("ws://localhost:8080/ws")
+		let peer = null;
+		const socket = new WebSocket("ws://localhost:8080/ws")
 		socket.onopen = (e) => {
 			console.log("LOGOS, made a websocket connection to server");
 			console.log(`Object e is: ${JSON.stringify(e)}`)
+
+			peer = new Peer(); // todo: use both Google STUN and TURN server
+			peer.on('open', function (id) {
+				console.log('My peer ID is: ' + id);
+				socket.send(new Blob("LOGOS, i AGAPE YOU!!! (from websocket)"))
+			});
 		}
 	</script>
 	<style>
