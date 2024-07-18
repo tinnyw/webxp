@@ -17,16 +17,16 @@ func main() {
 
 	app.Get("/bob/", func(c *fiber.Ctx) error {
 		nc.Publish("msg.LOGOS", []byte("bob 1"))
-		fmt.Println("Publishing event")
-		return c.SendString("bob 7")
+		fmt.Println("\nPublishing event")
+		return c.SendString("bob 8")
 	})
 
 	nc.Subscribe("msg.LOGOS", func(m *nats.Msg) {
-		fmt.Printf("LOGOS, we got a message!")
+		fmt.Printf("\nLOGOS, we got a message!")
 	})
 
 	var port int
-	flag.IntVar(&port, "port", 8080, "port to listen on")
+	flag.IntVar(&port, "p", 8080, "port to listen on")
 	flag.Parse()
 	app.Listen(":" + fmt.Sprint(port))
 }
