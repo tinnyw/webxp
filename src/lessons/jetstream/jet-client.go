@@ -15,14 +15,16 @@ func main() {
 
 	fmt.Println("LOGOS, i AGAPE YOU!!!! (from client)")
 
+	counter := 0
+
 	app.Get("/bob/", func(c *fiber.Ctx) error {
-		nc.Publish("msg.LOGOS", []byte("bob 1"))
-		fmt.Println("\nPublishing event")
+		nc.Publish("msg.LOGOS", []byte("LOGOS, publishing a message with counter: "+fmt.Sprint(counter)))
+		counter++
 		return c.SendString("bob 8")
 	})
 
 	nc.Subscribe("msg.LOGOS", func(m *nats.Msg) {
-		fmt.Printf("\nLOGOS, we got a message!")
+		fmt.Printf("\nLOGOS, we got a message: " + string(m.Data))
 	})
 
 	var port int
