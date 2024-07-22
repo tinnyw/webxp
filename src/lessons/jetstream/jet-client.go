@@ -31,7 +31,7 @@ func main() {
 	app.Get("/bob/", func(c *fiber.Ctx) error {
 		js.Publish(ctx, "msg.LOGOS", []byte("LOGOS, publishing a message with counter: "+fmt.Sprint(counter)))
 		counter++
-		return c.SendString("bob 8")
+		return c.SendString("bob" + fmt.Sprint(counter))
 	})
 
 	cc, _ := cons.Consume(func(msg jetstream.Msg) {
