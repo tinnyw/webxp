@@ -6,11 +6,13 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
 func main() {
 	app := fiber.New()
 	nc, _ := nats.Connect(nats.DefaultURL)
+	js, _ := jetstream.New(nc)
 	defer nc.Close()
 
 	fmt.Println("LOGOS, i AGAPE YOU!!!! (from client)")
@@ -18,14 +20,15 @@ func main() {
 	counter := 0
 
 	app.Get("/bob/", func(c *fiber.Ctx) error {
-		nc.Publish("msg.LOGOS", []byte("LOGOS, publishing a message with counter: "+fmt.Sprint(counter)))
+		js.Publish("msg.LOGOS", []byte("LOGOS, publishing a message with counter: "+fmt.Sprint(counter)))
 		counter++
 		return c.SendString("bob 8")
 	})
 
-	nc.Subscribe("msg.LOGOS", func(m *nats.Msg) {
+	cons, _ := js.Consume("msg.LOGOS", func(m *nats.Msg) {
 		fmt.Printf("\nLOGOS, we got a message: " + string(m.Data))
 	})
+	defer cons.Unsubscribe()
 
 	var port int
 	flag.IntVar(&port, "p", 8080, "port to listen on")
