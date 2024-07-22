@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/nats-io/nats.go"
@@ -19,16 +21,24 @@ func main() {
 
 	counter := 0
 
+	// retrieve consumer handle from a stream
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	stream, _ := js.Stream(ctx, "msg.LOGOS")
+	cons, _ := stream.Consumer(ctx, "msg.LOGOS")
+
 	app.Get("/bob/", func(c *fiber.Ctx) error {
-		js.Publish("msg.LOGOS", []byte("LOGOS, publishing a message with counter: "+fmt.Sprint(counter)))
+		js.Publish(ctx, "msg.LOGOS", []byte("LOGOS, publishing a message with counter: "+fmt.Sprint(counter)))
 		counter++
 		return c.SendString("bob 8")
 	})
 
-	cons, _ := js.Consume("msg.LOGOS", func(m *nats.Msg) {
-		fmt.Printf("\nLOGOS, we got a message: " + string(m.Data))
+	cc, _ := cons.Consume(func(msg jetstream.Msg) {
+		fmt.Println("\nLOGOS, we got a message!", string(msg.Data()))
+		msg.Ack()
 	})
-	defer cons.Unsubscribe()
+	defer cc.Stop()
 
 	var port int
 	flag.IntVar(&port, "p", 8080, "port to listen on")
