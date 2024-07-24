@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"time"
+	// "math/rand"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/nats-io/nats.go"
@@ -22,23 +22,33 @@ func main() {
 	counter := 0
 
 	// retrieve consumer handle from a stream
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	ctx := context.Background()
 
-	stream, _ := js.Stream(ctx, "msg.LOGOS")
-	cons, _ := stream.Consumer(ctx, "msg.LOGOS")
+	stream, _ := js.CreateOrUpdateStream(ctx, jetstream.StreamConfig{Name: "LOGOS", Subjects: []string{"LOGOS.>"}})
+	fmt.Println("\nLOGOS, created stream: ", stream)
 
 	app.Get("/bob/", func(c *fiber.Ctx) error {
-		js.Publish(ctx, "msg.LOGOS", []byte("LOGOS, publishing a message with counter: "+fmt.Sprint(counter)))
-		counter++
+		_, pubErr := js.Publish(ctx, "LOGOS.msg", []byte("LOGOS, publishing a message with counter: "+fmt.Sprint(counter)))
+		if pubErr != nil {
+			fmt.Println("\nLOGOS, error publishing message: ", pubErr)
+		} else {
+			fmt.Println("\nLOGOS, publishing a message with counter: ", counter)
+			counter++
+		}
 		return c.SendString("bob" + fmt.Sprint(counter))
 	})
 
-	cc, _ := cons.Consume(func(msg jetstream.Msg) {
-		fmt.Println("\nLOGOS, we got a message!", string(msg.Data()))
-		msg.Ack()
-	})
-	defer cc.Stop()
+	// rand_num := rand.Int() // create random number
+	consumer, consErr := js.CreateOrUpdateConsumer(ctx, "LOGOS", jetstream.ConsumerConfig{})
+
+	if consErr != nil {
+		fmt.Println("\nLOGOS, error creating consumer: ", consErr)
+	} else {
+		fmt.Println("\nLOGOS, created consumer: ", consumer)
+		consumer.Consume(func(msg jetstream.Msg) {
+			fmt.Println("\nLOGOS, received message: ", string(msg.Data()))
+		})
+	}
 
 	var port int
 	flag.IntVar(&port, "p", 8080, "port to listen on")
