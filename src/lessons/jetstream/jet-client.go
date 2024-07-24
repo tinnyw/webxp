@@ -45,9 +45,13 @@ func main() {
 		fmt.Println("\nLOGOS, error creating consumer: ", consErr)
 	} else {
 		fmt.Println("\nLOGOS, created consumer: ", consumer)
-		consumer.Consume(func(msg jetstream.Msg) {
+		_, consumeErr := consumer.Consume(func(msg jetstream.Msg) {
 			fmt.Println("\nLOGOS, received message: ", string(msg.Data()))
 		})
+
+		if consumeErr != nil {
+			fmt.Println("\nLOGOS, error consuming messages: ", consumeErr)
+		}
 	}
 
 	var port int
