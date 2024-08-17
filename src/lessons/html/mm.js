@@ -4,12 +4,12 @@ const renderScene = () => {
 	const canvas = document.querySelector('#mm');
 	const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
 
-	const fov = 75;
+	const fov = 90;
 	const aspect = 2;  // the canvas default
 	const near = 0.1;
-	const far = 5;
+	const far = 30;
 	const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-	camera.position.z = 3;
+	camera.position.z = 7;
 
 	const scene = new THREE.Scene();
 	const boxWidth = 3;
@@ -24,7 +24,7 @@ const renderScene = () => {
 
 	renderer.render(scene, camera);
 	const render = (time) => {
-	  time *= 0.0001;  // convert time to seconds
+	  time *= 0.0003;  // convert time to seconds
 	 
 	  cube.rotation.x = time;
 	  cube.rotation.y = time;
