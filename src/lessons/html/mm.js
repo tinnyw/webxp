@@ -17,12 +17,29 @@ const renderScene = () => {
 	const boxDepth = 3;
 	const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
-	const material = new THREE.MeshBasicMaterial({ color: 0x44aa88 });
+	const material = new THREE.MeshPhongMaterial({color: 0x0077CC});  // greenish blue
 
 	const cube = new THREE.Mesh(geometry, material);
 	scene.add(cube);
 
 	renderer.render(scene, camera);
+	const render = (time) => {
+	  time *= 0.0001;  // convert time to seconds
+	 
+	  cube.rotation.x = time;
+	  cube.rotation.y = time;
+	 
+	  renderer.render(scene, camera);
+	 
+	  requestAnimationFrame(render);
+	}
+	requestAnimationFrame(render);
+
+	const color = 0xFFFFFF;
+	const intensity = 3;
+	const light = new THREE.DirectionalLight(color, intensity);
+	light.position.set(-1, 2, 4);
+	scene.add(light);
 }
 
 renderScene()
