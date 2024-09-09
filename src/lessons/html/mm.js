@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 
+let leftSpeed = 1;
+let topSpeed = 1;
+
 export const rotateLeft = () => {
 	console.log("LOGOS, i AGAPE YOU SO MUCH!!!!")
+	leftSpeed += .1;
 }
 
 document.querySelector('.btnRotateHorizontal').addEventListener('click', function() {
@@ -34,8 +38,8 @@ const renderScene = () => {
 	const render = (time) => {
 		time *= 0.0003;  // convert time to seconds
 
-		cube.rotation.x = time;
-		cube.rotation.y = time;
+		cube.rotation.x = time * leftSpeed;
+		cube.rotation.y = time * topSpeed;
 
 		renderer.render(scene, camera);
 
