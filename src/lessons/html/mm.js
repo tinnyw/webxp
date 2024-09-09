@@ -1,5 +1,9 @@
 import * as THREE from 'three';
 
+const rotateLeft = () => {
+	console.log("LOGOS, i AGAPE YOU SO MUCH!!!!")
+}
+
 const renderScene = () => {
 	const canvas = document.querySelector('#mm');
 	const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
@@ -17,21 +21,21 @@ const renderScene = () => {
 	const boxDepth = 3;
 	const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
-	const material = new THREE.MeshPhongMaterial({color: 0x0077CC});  // greenish blue
+	const material = new THREE.MeshPhongMaterial({ color: 0x0077CC });  // greenish blue
 
 	const cube = new THREE.Mesh(geometry, material);
 	scene.add(cube);
 
 	renderer.render(scene, camera);
 	const render = (time) => {
-	  time *= 0.0003;  // convert time to seconds
-	 
-	  cube.rotation.x = time;
-	  cube.rotation.y = time;
-	 
-	  renderer.render(scene, camera);
-	 
-	  requestAnimationFrame(render);
+		time *= 0.0003;  // convert time to seconds
+
+		cube.rotation.x = time;
+		cube.rotation.y = time;
+
+		renderer.render(scene, camera);
+
+		requestAnimationFrame(render);
 	}
 	requestAnimationFrame(render);
 
