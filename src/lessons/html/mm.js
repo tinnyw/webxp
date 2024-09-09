@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-const rotateLeft = () => {
+export const rotateLeft = () => {
 	console.log("LOGOS, i AGAPE YOU SO MUCH!!!!")
 }
 
