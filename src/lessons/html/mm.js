@@ -4,6 +4,10 @@ export const rotateLeft = () => {
 	console.log("LOGOS, i AGAPE YOU SO MUCH!!!!")
 }
 
+document.querySelector('.btnRotateHorizontal').addEventListener('click', function() {
+	rotateLeft()
+});
+
 const renderScene = () => {
 	const canvas = document.querySelector('#mm');
 	const renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
